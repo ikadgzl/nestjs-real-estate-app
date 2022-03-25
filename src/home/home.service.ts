@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { HomeResponseDto } from './dtos/home.dto';
+import { CreateHomeDto, HomeResponseDto, UpdateHomeDto } from './dtos/home.dto';
 
 interface GetHomesParams {
   city?: string;
@@ -33,18 +33,100 @@ export class HomeService {
     });
   }
 
-  getHomeById() {
-    throw new Error('Method not implemented.');
+  async getHomeById(id: number) {
+    const home = await this.prismaService.home.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        images: true,
+      },
+    });
+
+    if (!home) throw new NotFoundException();
+
+    return new HomeResponseDto(home);
   }
 
-  createHome() {
-    throw new Error('Method not implemented.');
+  async createHome({
+    address,
+    city,
+    images,
+    landSize,
+    numberOfBathrooms,
+    numberOfBedrooms,
+    price,
+    propertyType,
+  }: CreateHomeDto) {
+    const createdHome = await this.prismaService.home.create({
+      data: {
+        address,
+        city,
+        number_of_bathrooms: numberOfBathrooms,
+        number_of_bedrooms: numberOfBedrooms,
+        land_size: landSize,
+        price,
+        property_type: propertyType,
+        realtor_id: 1,
+      },
+    });
+
+    const homeImages = images.map((image) => ({
+      url: image.url,
+      home_id: createdHome.id,
+    }));
+
+    await this.prismaService.image.createMany({
+      data: homeImages,
+    });
+
+    return new HomeResponseDto(createdHome);
   }
 
-  updateHome() {
-    throw new Error('Method not implemented.');
+  async updateHome(
+    {
+      address,
+      city,
+      landSize,
+      numberOfBathrooms,
+      numberOfBedrooms,
+      price,
+      propertyType,
+    }: UpdateHomeDto,
+    id: number,
+  ) {
+    const home = await this.prismaService.home.findUnique({ where: { id } });
+
+    if (!home) throw new NotFoundException();
+
+    const updatedHome = await this.prismaService.home.update({
+      where: { id },
+      data: {
+        address,
+        city,
+        land_size: landSize,
+        number_of_bathrooms: numberOfBathrooms,
+        number_of_bedrooms: numberOfBedrooms,
+        price,
+        property_type: propertyType,
+      },
+    });
+
+    return new HomeResponseDto(updatedHome);
   }
-  deleteHome() {
-    throw new Error('Method not implemented.');
+
+  async deleteHome(id: number) {
+    const home = await this.prismaService.home.findUnique({ where: { id } });
+
+    if (!home) throw new NotFoundException();
+
+    await this.prismaService.image.deleteMany({
+      where: {
+        home_id: id,
+      },
+    });
+    await this.prismaService.home.delete({ where: { id } });
+
+    return true;
   }
 }

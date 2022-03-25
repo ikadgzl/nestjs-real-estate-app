@@ -34,4 +34,43 @@ Content-Type: application/json
 
 ###
 
-GET  http://localhost:3000/api/v1/home?city=qwd
+GET  http://localhost:3000/api/v1/home
+
+###
+
+GET  http://localhost:3000/api/v1/home/3
+###
+
+POST  http://localhost:3000/api/v1/home
+Content-Type: application/json
+
+{
+  "address": "soemthing",
+  "numberOfBedrooms": 1,
+  "numberOfBathrooms": 2,
+  "city": "soemthing",
+  "price": 3,
+  "landSize": 4,
+  "propertyType": "test",
+  "images": [{"url": "img1"}, {"url": "img2"}, {"url": "img3"}],
+  "propertyType": "CONDO"
+}
+
+###
+
+PUT  http://localhost:3000/api/v1/home/12
+Content-Type: application/json
+
+{
+  "address": "UPDATED",
+  "numberOfBedrooms": 111,
+  "numberOfBathrooms": 11,
+  "city": "UPDATED",
+  "price": 111,
+  "landSize": 111,
+  "propertyType": "CONDO"
+}
+
+###
+
+DELETE  http://localhost:3000/api/v1/home/12
