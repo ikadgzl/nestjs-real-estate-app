@@ -30,7 +30,7 @@ model User {
   realtor_messages      Message[] @relation("realtor_messages")
 }
 
-enum PropertType {
+enum PropertyType {
   RESIDENTIAL
   CONDO
 }
@@ -46,7 +46,7 @@ model Home {
   land_size             Float
   createad_at           DateTime @default(now())
   updated_at            DateTime @updatedAt   
-  property_type         PropertType
+  property_type         PropertyType
   images                Image[]
   realtor_id            Int
   realtor               User @relation(fields: [realtor_id],  references: [id])
