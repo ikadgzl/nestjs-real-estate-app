@@ -8,8 +8,10 @@ import {
   Post,
   Put,
   Query,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PropertyType } from '@prisma/client';
+import { JWTUserType, User } from 'src/user/decorators/user.decorator';
 import { CreateHomeDto, HomeResponseDto, UpdateHomeDto } from './dtos/home.dto';
 import { HomeService } from './home.service';
 
@@ -47,20 +49,32 @@ export class HomeController {
   }
 
   @Post()
-  createHome(@Body() body: CreateHomeDto) {
-    return this.homeService.createHome(body);
+  createHome(@Body() body: CreateHomeDto, @User() user: JWTUserType) {
+    return this.homeService.createHome(body, user.id);
   }
 
   @Put('/:id')
-  updateHome(
+  async updateHome(
     @Body() body: UpdateHomeDto,
     @Param('id', ParseIntPipe) id: number,
+    @User() user: JWTUserType,
   ) {
+    const realtor = await this.homeService.getRealtorByHomeId(id);
+
+    if (realtor.id !== user.id) throw new UnauthorizedException();
+
     return this.homeService.updateHome(body, id);
   }
 
   @Delete('/:id')
-  deleteHome(@Param('id', ParseIntPipe) id: number) {
+  async deleteHome(
+    @Param('id', ParseIntPipe) id: number,
+    @User() user: JWTUserType,
+  ) {
+    const realtor = await this.homeService.getRealtorByHomeId(id);
+
+    if (realtor.id !== user.id) throw new UnauthorizedException();
+
     return this.homeService.deleteHome(id);
   }
 }

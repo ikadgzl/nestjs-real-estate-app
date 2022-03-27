@@ -2,6 +2,7 @@ import * as bcrypt from 'bcrypt';
 import {
   Body,
   Controller,
+  Get,
   Param,
   ParseEnumPipe,
   Post,
@@ -10,10 +11,16 @@ import {
 import { UserType } from '@prisma/client';
 import { GenerateProductKeyDto, SigninDto, SignupDto } from '../dtos/auth.dto';
 import { AuthService } from './auth.service';
+import { JWTUserType, User } from '../decorators/user.decorator';
 
 @Controller('/api/v1/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Get('/me')
+  me(@User() user: JWTUserType) {
+    return user;
+  }
 
   @Post('/signup/:userType')
   signup(

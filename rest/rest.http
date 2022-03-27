@@ -2,14 +2,15 @@ GET http://localhost:3000
 
 ###
 
-POST http://localhost:3000/api/v1/auth/signup
+POST http://localhost:3000/api/v1/auth/signup/REALTOR
 Content-Type: application/json
 
 {
   "name": "test",
   "phone": "123",
-  "email": "test@test.com",
-  "password": "test1"
+  "email": "realtor@gmail.com",
+  "password": "realtor",
+  "productKey": "$2b$10$2oWuU4B8PnGErW4CQ0pPEOMIy0Ec.yOi4ujs7eJvpPPntl6PCa27q"
 }
 ###
 
@@ -17,8 +18,19 @@ POST http://localhost:3000/api/v1/auth/signin
 Content-Type: application/json
 
 {
-  "email": "test@test.com",
-  "password": "test1"
+  "email": "ilker@gmail.com",
+  "password": "123"
+}
+
+###
+
+
+POST http://localhost:3000/api/v1/auth/key
+Content-Type: application/json
+
+{
+  "email": "realtor@gmail.com",
+  "userType": "REALTOR"
 }
 
 ###
@@ -35,6 +47,8 @@ Content-Type: application/json
 ###
 
 GET  http://localhost:3000/api/v1/home
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ4MzQ0NjU2LCJleHAiOjE2NDg1MTc0NTZ9.jBi830sJHVcQn5NdJ_HA50raYawnsUCBdhoZWmGjkzI
+
 
 ###
 
@@ -42,10 +56,11 @@ GET  http://localhost:3000/api/v1/home/3
 ###
 
 POST  http://localhost:3000/api/v1/home
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjQ4MzQ1ODkxLCJleHAiOjE2NDg1MTg2OTF9.KDTjH5bM-kpGUmAN-liIGuthONftSbQf0he6xJvDoKE
 Content-Type: application/json
 
 {
-  "address": "soemthing",
+  "address": "REALTORE AIT",
   "numberOfBedrooms": 1,
   "numberOfBathrooms": 2,
   "city": "soemthing",
@@ -73,4 +88,5 @@ Content-Type: application/json
 
 ###
 
-DELETE  http://localhost:3000/api/v1/home/12
+DELETE  http://localhost:3000/api/v1/home/15
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjQ4MzQ1ODkxLCJleHAiOjE2NDg1MTg2OTF9.KDTjH5bM-kpGUmAN-liIGuthONftSbQf0he6xJvDoKE
